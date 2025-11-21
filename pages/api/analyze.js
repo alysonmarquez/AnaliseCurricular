@@ -314,7 +314,13 @@ export default async function handler(req, res) {
     }
 
     // Mensagens de erro mais específicas
-    if (error.message?.includes("API key") || error.message?.includes("GEMINI")) {
+    if (error.message?.includes("leaked") || error.message?.includes("reportada como vazada")) {
+      return res.status(500).json({ 
+        error: "Sua chave API foi reportada como vazada. Por favor, gere uma nova chave API no Google AI Studio e atualize o arquivo .env.local" 
+      });
+    }
+    
+    if (error.message?.includes("API key") || error.message?.includes("GEMINI") || error.message?.includes("401") || error.message?.includes("403")) {
       return res.status(500).json({ error: "Erro de autenticação com a API. Verifique as configurações." });
     }
     

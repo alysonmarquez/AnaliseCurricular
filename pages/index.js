@@ -1,9 +1,11 @@
 import { useState, useRef } from "react";
+import UpsellBlock from "../components/UpsellBlock";
 
 export default function Home() {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [analysis, setAnalysis] = useState("");
+  const [originalText, setOriginalText] = useState("");
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
   const [dragActive, setDragActive] = useState(false);
@@ -54,6 +56,7 @@ export default function Home() {
     setError("");
     setLoading(true);
     setAnalysis("");
+    setOriginalText("");
 
     const formData = new FormData();
     formData.append("file", file);
@@ -77,6 +80,7 @@ export default function Home() {
         setError(data.error || "Erro ao analisar currículo.");
       } else {
         setAnalysis(data.analysis);
+        setOriginalText(data.text || "");
       }
     } catch (err) {
       console.error("Erro na requisição:", err);
@@ -280,6 +284,7 @@ export default function Home() {
                 <button
                   onClick={() => {
                     setAnalysis("");
+                    setOriginalText("");
                     setFile(null);
                     if (fileInputRef.current) fileInputRef.current.value = "";
                   }}
@@ -289,6 +294,15 @@ export default function Home() {
                 </button>
               </div>
             </div>
+          )}
+
+          {/* Upsell Block */}
+          {analysis && originalText && (
+            <UpsellBlock 
+              analysis={analysis}
+              originalText={originalText}
+              fileName={file?.name || "curriculo"}
+            />
           )}
         </div>
 
